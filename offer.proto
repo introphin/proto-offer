@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+// protoc --go_out=plugins=grpc:. *.proto
+
+package offer;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message Offer {
+    int32 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    string uuid = 4;
+    int32 category_id = 5;
+    int32 decision_id = 6;
+    int32 ad_user_id = 7;
+    string ad_hash = 8;
+    string ad_url = 9;
+    string ad_token = 10;
+    double ad_coefficient = 11;
+    string name = 12;
+    string name_composite = 13;
+    int32 status = 14;
+    bool transit = 15;
+    bool api_iframe = 16;
+    string currency = 17;
+    string link = 18;
+    string rule = 19;
+    string description = 20;
+    string advice = 21;
+    string source = 22;
+    double price = 23;
+    string price_currency = 24;
+    bool cap_enable = 25;
+    int32 cap_daily = 26;
+    int32 cap_type = 27;
+    int32 visibility = 28;
+    double rank = 29;
+    double approved = 30;
+    bool daily = 31;
+    string img_avatar = 32;
+    string img_product = 33;
+    string material_link = 34;
+    int32 availability = 35;
+    int32 pills = 36;
+}
+
+message GetOfferRequest {
+    int32 id = 1;
+}
+
+enum Mode {
+    ByUser = 0;
+    All = 1;
+}
+
+enum Status {
+    OfferNew = 0;
+    OfferActive = 1;
+    OfferPause = 2;
+    OfferInArchive = 3;
+}
+
+enum OrderType {
+    ASC = 0;
+    DESC = 1;
+}
+
+message Visibility {
+    Mode mode = 1;
+    int32 affiliate_id = 2;
+}
+
+message Availability {
+    Mode mode = 1;
+    int32 affiliate_id = 2;
+}
+
+message ListOffersRequest {
+    int32 limit = 1;
+    int32 offset = 2;
+    repeated int32 ids = 3;
+    Visibility visibility = 4;
+    Availability availability = 5;
+    repeated Status statuses = 6;
+    string order_by = 7;
+    OrderType order_type = 8;
+    string geo_code = 9;
+}
+
+message ListOffersResponse {
+    repeated Offer offers = 1;
+    int32 total = 2;
+}
+
+message Category {
+    int32 id = 1;
+    string name = 2;
+}
+message ListCategoriesRequest {
+}
+message ListCategoriesResponse {
+    repeated Category categories = 1;
+}
+
+message Goal {
+    int32 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    int32 offer_id = 4;
+    int32 type = 5;
+    double coefficient = 6;
+    double pay_in = 7;
+    double pay_out = 8;
+}
+
+message GetGoalRequest {
+    int32 id = 1;
+    int32 offer_id = 2;
+}
+
+message ListGoalsRequest {
+    repeated int32 ids = 1;
+    repeated int32 offer_ids = 2;
+}
+
+message ListGoalsResponse {
+    repeated Goal goals = 1;
+}
+
+message OfferGeoCode {
+    int32 id = 1;
+    int32 offer_id = 2;
+    string code = 3;
+}
+
+message ListOfferGeoCodesRequest {
+    repeated int32 offer_ids = 1;
+}
+
+message ListOfferGeoCodesResponse {
+    repeated OfferGeoCode offer_geo_codes = 1;
+}
+
+message TotalInfo {
+    int32 count_offer = 1;
+    int32 count_category = 2;
+    int32 count_geo = 3;
+}
+
+service OfferService {
+    rpc GetOffer (GetOfferRequest) returns (Offer) {}
+    rpc ListOffers (ListOffersRequest) returns (ListOffersResponse) {}
+    rpc ListCategories (ListCategoriesRequest) returns (ListCategoriesResponse) {}
+    rpc GetGoal (GetGoalRequest) returns (Goal) {}
+    rpc ListGoals (ListGoalsRequest) returns (ListGoalsResponse) {}
+    rpc ListOfferGeoCodes (ListOfferGeoCodesRequest) returns (ListOfferGeoCodesResponse) {}
+    rpc GetTotalInfo (google.protobuf.Empty) returns (TotalInfo) {}
+}
