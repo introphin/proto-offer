@@ -87,6 +87,7 @@ message ListOffersRequest {
     string order_by = 7;
     OrderType order_type = 8;
     string geo_code = 9;
+    string search = 10;
 }
 
 message ListOffersResponse {
